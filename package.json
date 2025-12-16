@@ -1,0 +1,22 @@
+{
+  "name": "owode-agent",
+  "version": "1.0.0",
+  "description": "Owode Agent Management System - Full Stack Application",
+  "main": "owodeagent-backend/server.js",
+  "scripts": {
+    "start": "node owodeagent-backend/server.js",
+    "build": "cd frontend && npm install && npm run build",
+    "install-all": "npm install && cd frontend && npm install && cd ../owodeagent-backend && npm install",
+    "dev": "cd owodeagent-backend && npm run dev",
+    "dev-frontend": "cd frontend && npm start",
+    "dev-backend": "cd owodeagent-backend && npm run dev"
+  },
+  "keywords": ["owode", "agent", "management", "react", "nodejs", "mongodb"],
+  "author": "Owode Agent Team",
+  "license": "ISC",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
