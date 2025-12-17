@@ -23,5 +23,13 @@ app.use('/auth', authRoutes);
 app.use('/customers', customerRoutes);
 app.use('/payments', paymentRoutes);
 
+// Serve static files from the React app build directory
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+// Catch all handler: send back React's index.html file for any non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
