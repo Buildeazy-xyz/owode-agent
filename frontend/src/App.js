@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import CustomerHistory from './pages/CustomerHistory';
 import AddPayment from './pages/AddPayment';
+import CustomerDashboard from './pages/CustomerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 
 function App()  {
