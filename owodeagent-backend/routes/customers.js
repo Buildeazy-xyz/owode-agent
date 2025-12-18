@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.get('/list', auth, agentApproved, getCustomers);
 
+router.get('/:id', auth, agentApproved, getCustomerById);
+
 router.post('/create', [
   auth,
   agentApproved,
@@ -25,9 +27,9 @@ router.post('/request-deletion', [
   agentApproved,
   body('customerId').notEmpty().withMessage('Customer ID is required'),
   body('reason').optional().isLength({ max: 500 }).withMessage('Reason must be less than 500 characters'),
-], requestCustomerDeletion);
+], requestDeletion);
 
-router.post('/approve-deletion', approveCustomerDeletion); // Admin route, no auth for now
+router.post('/approve-deletion', approveDeletion); // Admin route, no auth for now
 
 router.get('/approve-deletion/:customerId', async (req, res) => {
   const { customerId } = req.params;

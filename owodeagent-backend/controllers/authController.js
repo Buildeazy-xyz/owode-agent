@@ -238,14 +238,15 @@ const login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ id: agent._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: agent._id, role: agent.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({
       token,
       agent: {
         id: agent._id,
         firstName: agent.firstName,
         lastName: agent.lastName,
-        email: agent.email
+        email: agent.email,
+        role: agent.role
       }
     });
   } catch (error) {

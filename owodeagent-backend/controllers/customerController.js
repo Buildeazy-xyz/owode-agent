@@ -3,10 +3,52 @@ const Customer = require('../models/Customer');
 const { sendEmail } = require('../utils/resendEmail');
 const { sendSMS } = require('../utils/sendSMS');
 
-const listCustomers = async (req, res) => {
+const getCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find().populate('agentId', 'firstName lastName'); // Show all customers with agent info
+    const customers = await Customer.find({ agentId: req.agent.id });
     res.json(customers);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const getCustomerById = async (req, res) => {
+  try {
+    const customer = await Customer.findOne({
+      _id: req.params.id,
+      agentId: req.agent.id
+    });
+
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    res.json(customer);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const deleteCustomer = async (req, res) => {
+  try {
+    // Only super-admin can delete directly
+    if (req.agent.role !== 'super-admin') {
+      return res.status(403).json({ message: 'Only super admin can delete customers directly' });
+    }
+
+    const customer = await Customer.findOneAndDelete({
+      _id: req.params.id,
+      agentId: req.agent.id
+    });
+
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    // Also delete all payments for this customer
+    await require('../models/Payment').deleteMany({ customerId: req.params.id });
+
+    res.json({ message: 'Customer and all associated payments deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -91,7 +133,7 @@ const createCustomer = async (req, res) => {
   }
 };
 
-const requestCustomerDeletion = async (req, res) => {
+const requestDeletion = async (req, res) => {
   const { customerId, reason } = req.body;
 
   try {
@@ -199,7 +241,7 @@ const requestCustomerDeletion = async (req, res) => {
   }
 };
 
-const approveCustomerDeletion = async (req, res) => {
+const approveDeletion = async (req, res) => {
   const { customerId, approved } = req.body;
 
   try {
@@ -344,4 +386,18 @@ const getPendingDeletions = async (req, res) => {
   }
 };
 
-module.exports = { listCustomers, createCustomer, requestCustomerDeletion, approveCustomerDeletion, getPendingDeletions };
+const getAllCustomers = async (req, res) => {
+  try {
+    // Only super-admin can view all customers
+    if (req.agent.role !== 'super-admin') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const allCustomers = await Customer.find({}).populate('agentId', 'firstName lastName email');
+    res.json(allCustomers);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = { getCustomers, getCustomerById, createCustomer, deleteCustomer, requestDeletion, approveDeletion, getPendingDeletions, getAllCustomers };

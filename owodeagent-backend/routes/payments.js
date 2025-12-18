@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { addPaymentController } = require('../controllers/paymentController');
+const { addPaymentController, getPayments, getPaymentsByCustomer, clearAllPayments } = require('../controllers/paymentController');
 const auth = require('../middleware/auth');
 const agentApproved = require('../middleware/agentApproved');
 
@@ -13,6 +13,8 @@ router.post('/add', [
   body('amount').isNumeric(),
   body('notifyType').isIn(['none', 'sms', 'email']),
 ], addPaymentController);
+
+router.get('/customer/:customerId', auth, agentApproved, getPaymentsByCustomer);
 
 router.get('/list', auth, agentApproved, async (req, res) => {
   try {

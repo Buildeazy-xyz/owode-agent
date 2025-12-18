@@ -7,7 +7,7 @@ const agentSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   passwordHash: { type: String, required: true },
   status: { type: String, enum: ['pending', 'approved'], default: 'pending' },
-  role: { type: String, default: 'agent' }
+  role: { type: String, enum: ['agent', 'super-admin'], default: 'agent' }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Agent', agentSchema);

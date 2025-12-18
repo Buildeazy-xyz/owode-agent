@@ -53,6 +53,12 @@ const AddPayment = () => {
       });
       setPaidDays(paidIndicesSet);
 
+      // Auto-select the next available payment date
+      const nextAvailableIndex = getNextAvailableIndex();
+      if (nextAvailableIndex) {
+        setSelectedDate(nextAvailableIndex);
+      }
+
     } catch (error) {
       console.error('Failed to fetch data');
     } finally {
