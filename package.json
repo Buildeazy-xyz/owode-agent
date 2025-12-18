@@ -1,0 +1,11 @@
+{
+  "name": "owode-agent",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "start": "node owodeagent-backend/server.js"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}
