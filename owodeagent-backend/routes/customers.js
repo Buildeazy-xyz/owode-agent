@@ -1,12 +1,12 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { listCustomers, createCustomer, requestCustomerDeletion, approveCustomerDeletion, getPendingDeletions } = require('../controllers/customerController');
+const { getCustomers, getCustomerById, createCustomer, deleteCustomer, requestDeletion, approveDeletion, getPendingDeletions, getAllCustomers } = require('../controllers/customerController');
 const auth = require('../middleware/auth');
 const agentApproved = require('../middleware/agentApproved');
 
 const router = express.Router();
 
-router.get('/list', auth, agentApproved, listCustomers);
+router.get('/list', auth, agentApproved, getCustomers);
 
 router.post('/create', [
   auth,
