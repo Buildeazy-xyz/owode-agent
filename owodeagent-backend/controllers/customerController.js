@@ -400,4 +400,23 @@ const getAllCustomers = async (req, res) => {
   }
 };
 
+const deleteAllCustomers = async (req, res) => {
+  try {
+    // Only super-admin can delete all customers
+    if (req.agent.role !== 'super-admin') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    // Delete all customers for all agents
+    await Customer.deleteMany({});
+
+    // Also delete all payments
+    await require('../models/Payment').deleteMany({});
+
+    res.json({ message: 'All customers and payments deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = { getCustomers, getCustomerById, createCustomer, deleteCustomer, requestDeletion, approveDeletion, getPendingDeletions, getAllCustomers, deleteAllCustomers };
