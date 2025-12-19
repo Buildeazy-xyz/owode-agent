@@ -11,7 +11,30 @@ const paymentRoutes = require("./routes/payments");
 const app = express();
 
 /* ---------- MIDDLEWARE ---------- */
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? function (origin, callback) {
+        // Allow requests with no origin (mobile apps, etc.)
+        if (!origin) return callback(null, true);
+
+        // Allow specific production domains
+        const allowedOrigins = [
+          'https://owode.xyz',
+          'https://www.owode.xyz',
+          'https://owode-agent.onrender.com',
+          'https://your-app-name.onrender.com'
+        ];
+
+        if (allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+
+        // Allow all origins for development/testing
+        return callback(null, true);
+      }
+    : ['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:3000', 'http://127.0.0.1:5000'],
+  credentials: true
+}));
 app.use(express.json());
 
 /* ---------- DATABASE ---------- */

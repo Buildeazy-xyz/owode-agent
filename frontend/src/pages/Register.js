@@ -106,6 +106,7 @@ const Register = () => {
               placeholder="Password"
               value={form.password}
               onChange={handleChange}
+              autoComplete="new-password"
               className="w-full px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-xl text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200"
               required
             />
