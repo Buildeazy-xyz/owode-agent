@@ -263,4 +263,18 @@ const getPendingAgents = async (req, res) => {
   }
 };
 
+const getAllAgents = async (req, res) => {
+  try {
+    // Only super-admin can view all agents
+    if (req.agent.role !== 'super-admin') {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    const allAgents = await Agent.find({}).select('firstName lastName email phone status role createdAt');
+    res.json(allAgents);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = { registerAgent, approveAgent, login, getPendingAgents };

@@ -400,4 +400,4 @@ const getAllCustomers = async (req, res) => {
   }
 };
 
-module.exports = { getCustomers, getCustomerById, createCustomer, deleteCustomer, requestDeletion, approveDeletion, getPendingDeletions, getAllCustomers };
+module.exports = { getCustomers, getCustomerById, createCustomer, deleteCustomer, requestDeletion, approveDeletion, getPendingDeletions, getAllCustomers, deleteAllCustomers };

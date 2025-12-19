@@ -3,7 +3,7 @@ const Payment = require('../models/Payment');
 const { sendEmail } = require('../utils/resendEmail');
 const { sendSMS } = require('../utils/sendSMS');
 
-const addPayment = async (customerId, agentId, amount, notifyType, paymentDate = null) => {
+const addPayment = async (customerId, agentId, amount, notifyType, paymentDate = null, paymentIndex = null) => {
   const customer = await Customer.findById(customerId);
   if (!customer) {
     throw new Error('Customer not found');
@@ -20,6 +20,10 @@ const addPayment = async (customerId, agentId, amount, notifyType, paymentDate =
     amount,
     notifyType,
   };
+
+  if (paymentIndex !== null) {
+    paymentData.paymentIndex = paymentIndex;
+  }
 
   // If payment date is provided, set the createdAt to that date
   if (paymentDate) {

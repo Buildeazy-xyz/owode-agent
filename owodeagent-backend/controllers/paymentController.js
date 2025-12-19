@@ -8,10 +8,10 @@ const addPaymentController = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { customerId, amount, paymentDate, notifyType } = req.body;
+  const { customerId, amount, paymentDate, notifyType, paymentIndex } = req.body;
 
   try {
-    const result = await addPayment(customerId, req.agent.id, amount, notifyType, paymentDate);
+    const result = await addPayment(customerId, req.agent.id, amount, notifyType, paymentDate, paymentIndex);
     res.status(201).json(result);
   } catch (error) {
     if (error.message === 'Customer has no email') {

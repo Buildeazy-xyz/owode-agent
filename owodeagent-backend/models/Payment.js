@@ -5,7 +5,8 @@ const paymentSchema = new mongoose.Schema({
   agentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Agent', required: true },
   amount: { type: Number, required: true },
   method: { type: String, default: 'cash' },
-  notifyType: { type: String, enum: ['none', 'sms', 'email'], default: 'none' }
+  notifyType: { type: String, enum: ['none', 'sms', 'email'], default: 'none' },
+  paymentIndex: { type: Number, required: false } // Tracks which payment period this represents (1, 2, 3, etc.)
 }, { timestamps: true });
 
 module.exports = mongoose.model('Payment', paymentSchema);

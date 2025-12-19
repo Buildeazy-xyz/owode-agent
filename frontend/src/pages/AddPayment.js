@@ -27,10 +27,8 @@ const AddPayment = () => {
       setAmount(foundCustomer?.contributionAmount || '');
 
       // Fetch existing payments to mark paid days
-      const paymentsRes = await api.get('/payments/list');
-      const customerPayments = paymentsRes.data.filter(payment =>
-        payment.customerId._id === customerId
-      );
+      const paymentsRes = await api.get(`/payments/customer/${customerId}`);
+      const customerPayments = paymentsRes.data;
 
       // For daily customers, determine the cycle start day
       let startDay = null;
@@ -46,10 +44,11 @@ const AddPayment = () => {
 
       // Extract payment indices from payment data
       const paidIndicesSet = new Set();
-      customerPayments.forEach((payment, index) => {
-        // For all frequencies, payments are stored in sequence
-        // We can use the payment index + 1 as the payment number
-        paidIndicesSet.add(index + 1);
+      customerPayments.forEach((payment) => {
+        // Use the stored paymentIndex to track which periods have been paid
+        if (payment.paymentIndex) {
+          paidIndicesSet.add(payment.paymentIndex);
+        }
       });
       setPaidDays(paidIndicesSet);
 
@@ -74,12 +73,14 @@ const AddPayment = () => {
     }
 
     try {
-      const paymentDate = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`;
+      const actualDate = getActualDateForIndex(selectedDate);
+      const paymentDate = actualDate.toISOString().split('T')[0];
       await api.post('/payments/add', {
         customerId,
         amount: parseFloat(amount),
         paymentDate,
         notifyType,
+        paymentIndex: selectedDate,
       });
       navigate('/dashboard');
     } catch (error) {
@@ -130,6 +131,16 @@ const AddPayment = () => {
       case 'yearly': return 365;
       default: return 1;
     }
+  };
+
+  const getActualDateForIndex = (index) => {
+    const intervalDays = getIntervalDays();
+    const startDate = cycleStartDay
+      ? new Date(new Date().getFullYear(), new Date().getMonth(), cycleStartDay)
+      : new Date();
+    const actualDate = new Date(startDate);
+    actualDate.setDate(startDate.getDate() + ((index - 1) * intervalDays));
+    return actualDate;
   };
 
   const getWeekDateRange = (weekNum) => {
@@ -356,37 +367,37 @@ const AddPayment = () => {
                 </>
               )}
               {selectedDate && (
-                <div className="mt-6 p-4 bg-white bg-opacity-20 rounded-xl">
-                  <p className="text-white font-semibold">
-                    Selected Date: {new Date(new Date().getFullYear(), new Date().getMonth(), selectedDate).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                  {customer?.contributionFrequency === 'daily' && !cycleStartDay && (
-                    <p className="text-white text-opacity-80 text-sm mt-1">
-                      This will start a 31-day daily savings cycle ending on: {
-                        new Date(new Date().getFullYear(), new Date().getMonth(), selectedDate + 30).toLocaleDateString('en-US', {
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric'
-                        })
-                      }
-                    </p>
-                  )}
-                  {customer?.contributionFrequency !== 'daily' && (
-                    <p className="text-white text-opacity-80 text-sm mt-1">
-                      Next payment due: {new Date(new Date().getFullYear(), new Date().getMonth(), selectedDate + getIntervalDays()).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
-                    </p>
-                  )}
-                </div>
-              )}
+                 <div className="mt-6 p-4 bg-white bg-opacity-20 rounded-xl">
+                   <p className="text-white font-semibold">
+                     Selected Date: {getActualDateForIndex(selectedDate).toLocaleDateString('en-US', {
+                       weekday: 'long',
+                       year: 'numeric',
+                       month: 'long',
+                       day: 'numeric'
+                     })}
+                   </p>
+                   {customer?.contributionFrequency === 'daily' && !cycleStartDay && (
+                     <p className="text-white text-opacity-80 text-sm mt-1">
+                       This will start a 31-day daily savings cycle ending on: {
+                         getActualDateForIndex(31).toLocaleDateString('en-US', {
+                           month: 'long',
+                           day: 'numeric',
+                           year: 'numeric'
+                         })
+                       }
+                     </p>
+                   )}
+                   {customer?.contributionFrequency !== 'daily' && (
+                     <p className="text-white text-opacity-80 text-sm mt-1">
+                       Next payment due: {getActualDateForIndex(selectedDate + 1).toLocaleDateString('en-US', {
+                         month: 'short',
+                         day: 'numeric',
+                         year: 'numeric'
+                       })}
+                     </p>
+                   )}
+                 </div>
+               )}
             </div>
 
             {/* Payment Form */}
