@@ -30,7 +30,7 @@ const registerAgent = async (req, res) => {
     });
     await agent.save();
 
-    console.log(`New agent registered with ID: ${agent._id}`);
+    console.log(`New agent registered with ID: ${agent._id} and status: ${agent.status}`);
 
     // Send email to admin
     const adminEmailHtml = `
@@ -256,9 +256,12 @@ const login = async (req, res) => {
 
 const getPendingAgents = async (req, res) => {
   try {
+    console.log('Fetching pending agents...');
     const pendingAgents = await Agent.find({ status: 'pending' }).select('firstName lastName email phone createdAt');
+    console.log(`Found ${pendingAgents.length} pending agents`);
     res.json(pendingAgents);
   } catch (error) {
+    console.error('Error fetching pending agents:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
