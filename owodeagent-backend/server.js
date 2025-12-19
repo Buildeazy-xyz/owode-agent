@@ -10,38 +10,30 @@ const paymentRoutes = require("./routes/payments");
 
 const app = express();
 
-/* ---------- MIDDLEWARE ---------- */
-const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? function (origin, callback) {
-        // Allow requests with no origin (mobile apps, etc.)
-        if (!origin) return callback(null, true);
+/* ---------- CORS CONFIGURATION ---------- */
+const allowedOrigins = [
+  'https://owode.xyz',
+  'https://www.owode.xyz'
+];
 
-        // Allow specific production domains
-        const allowedOrigins = [
-          'https://owode.xyz',
-          'https://www.owode.xyz',
-          'https://owode-agent.onrender.com',
-          'https://your-app-name.onrender.com'
-        ];
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin (like Postman)
+    if (!origin) return callback(null, true);
 
-        if (allowedOrigins.includes(origin)) {
-          return callback(null, true);
-        }
-
-        // Allow all origins for development/testing
-        return callback(null, true);
-      }
-    : ['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:3000', 'http://127.0.0.1:5000'],
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-};
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-app.use(cors(corsOptions));
-
-// Handle preflight requests
-app.options('*', cors(corsOptions));
+// 🔥 THIS LINE IS CRITICAL - Handle preflight requests
+app.options('*', cors());
 
 app.use(express.json());
 
