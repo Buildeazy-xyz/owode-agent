@@ -89,28 +89,11 @@ const Dashboard = () => {
                 <img
                   src="/owodelogo.jpeg"
                   alt="Owode Agent Logo"
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-2xl object-cover"
+                  className="h-10 sm:h-14 rounded-2xl shadow-2xl object-contain"
                 />
-                <h1 className="ml-3 sm:ml-4 text-lg sm:text-2xl font-bold text-white">
-                  Agent {agent.lastName || 'Dashboard'}
-                </h1>
+               
               </div>
-              <button
-                onClick={async () => {
-                  if (window.confirm('Are you sure you want to clear ALL payment history and reset ALL customer balances? This action cannot be undone.')) {
-                    try {
-                      await api.delete('/payments/clear-all');
-                      alert('All payment history and balances have been cleared.');
-                      fetchCustomers(); // Refresh the data
-                    } catch (error) {
-                      alert('Failed to clear data.');
-                    }
-                  }
-                }}
-                className="bg-orange-500 bg-opacity-20 text-white px-4 py-2 rounded-xl hover:bg-opacity-30 backdrop-blur-sm border border-orange-500 border-opacity-30 transition-all duration-200 mr-2"
-              >
-                Clear All Data
-              </button>
+             
               {agent.role === 'super-admin' && (
                 <button
                   onClick={() => navigate('/admin')}
@@ -133,6 +116,27 @@ const Dashboard = () => {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {/* Stats Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          
+
+   <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white border-opacity-20 p-4 sm:p-6">
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-xl flex items-center justify-center">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                </div>
+                 
+
+                <div className="ml-3 sm:ml-4">
+                   <h1 className="ml-3 sm:ml-4 text-lg sm:text-2xl font-bold text-white">
+                  Agent {agent.lastName || 'Dashboard'}
+                </h1>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white border-opacity-20 p-4 sm:p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -142,6 +146,8 @@ const Dashboard = () => {
                     </svg>
                   </div>
                 </div>
+                 
+
                 <div className="ml-3 sm:ml-4">
                   <h3 className="text-base sm:text-lg font-semibold text-white">Total Customers</h3>
                   <p className="text-xl sm:text-2xl font-bold text-white">{customers.length}</p>

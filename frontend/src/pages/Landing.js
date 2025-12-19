@@ -22,9 +22,8 @@ const Landing = () => {
                 <img
                   src="/owodelogo.jpeg"
                   alt="Owode Agent Logo"
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover"
+                  className="h-12 sm:h-16 rounded-lg object-contain"
                 />
-                <h1 className="ml-3 text-xl sm:text-2xl font-bold text-white">Owode Agent</h1>
               </div>
               <div className="space-x-4">
                 <button

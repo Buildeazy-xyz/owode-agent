@@ -63,36 +63,26 @@ const CustomerDashboard = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4 sm:py-6">
               <div className="flex items-center">
-                <button
-                  onClick={() => navigate('/dashboard')}
-                  className="mr-4 bg-white bg-opacity-20 text-white p-2 rounded-xl hover:bg-opacity-30 transition-all duration-200"
-                >
-                  ← Back
-                </button>
+              
                 <img
                   src="/owodelogo.jpeg"
                   alt="Owode Agent Logo"
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-2xl object-cover"
+                  className="h-10 sm:h-14 rounded-2xl shadow-2xl object-contain"
                 />
-                <div className="ml-3 sm:ml-4">
-                  <h1 className="text-lg sm:text-2xl font-bold text-white">
-                    {customer.firstName} {customer.lastName}
-                  </h1>
-                  <p className="text-white text-opacity-80 text-sm">Customer Dashboard</p>
-                </div>
+               
               </div>
               <div className="flex space-x-2">
                 <button
                   onClick={() => navigate(`/customer/${customerId}/add-payment`)}
                   className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-xl hover:from-green-500 hover:to-blue-600 transform hover:scale-105 transition-all duration-200"
                 >
-                  💰 Add Payment
+                   Add
                 </button>
                 <button
                   onClick={() => navigate(`/customer/${customerId}/history`)}
                   className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-4 py-2 rounded-xl hover:from-cyan-500 hover:to-blue-600 transform hover:scale-105 transition-all duration-200"
                 >
-                  📊 View History
+                   History
                 </button>
               </div>
             </div>
@@ -103,6 +93,12 @@ const CustomerDashboard = () => {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {/* Customer Info Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
+            
+             <div className="ml-3 sm:ml-4">
+                  
+                  <p className="text-white text-opacity-80 text-sm">Customer Dashboard</p>
+                </div>
+
             <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white border-opacity-20 p-4 sm:p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">

@@ -46,7 +46,7 @@ const Register = () => {
           <img
             src="/owodelogo.jpeg"
             alt="Owode Agent Logo"
-            className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl mx-auto mb-3 sm:mb-4 shadow-2xl object-cover"
+            className="h-16 sm:h-20 rounded-2xl mx-auto mb-3 sm:mb-4 shadow-2xl object-contain"
           />
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Join Owode Agent</h1>
           <p className="text-white text-opacity-80 text-sm sm:text-base">Create your account to get started</p>

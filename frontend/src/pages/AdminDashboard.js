@@ -79,7 +79,7 @@ const AdminDashboard = () => {
                 <img
                   src="/owodelogo.jpeg"
                   alt="Owode Agent Logo"
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-2xl object-cover"
+                  className="h-12 sm:h-16 rounded-2xl shadow-2xl object-contain"
                 />
                 <h1 className="ml-3 sm:ml-4 text-lg sm:text-2xl font-bold text-white">
                   Admin Dashboard

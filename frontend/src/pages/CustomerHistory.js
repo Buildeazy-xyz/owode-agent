@@ -75,13 +75,12 @@ const CustomerHistory = () => {
                 <img
                   src="/owodelogo.jpeg"
                   alt="Owode Agent Logo"
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-2xl object-cover"
+                  className="h-12 sm:h-16 rounded-2xl shadow-2xl object-contain"
                 />
-                <h1 className="ml-3 sm:ml-4 text-lg sm:text-2xl font-bold text-white">Customer History</h1>
               </div>
               <Link
                 to="/dashboard"
-                className="bg-white bg-opacity-20 text-white px-6 py-2 rounded-xl hover:bg-opacity-30 backdrop-blur-sm border border-white border-opacity-30 transition-all duration-200"
+                className="bg-white bg-opacity-10 text-white px-6 py-2 rounded-xl hover:bg-opacity-30 backdrop-blur-sm border border-white border-opacity-30 transition-all duration-200"
               >
                 Back to Dashboard
               </Link>
@@ -91,41 +90,7 @@ const CustomerHistory = () => {
 
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Customer Info Card */}
-          <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white border-opacity-20 p-8 mb-8">
-            <div className="flex items-center mb-6">
-              <div className="w-16 h-16 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mr-6">
-                <span className="text-white font-bold text-2xl">
-                  {customer.firstName[0]}{customer.lastName[0]}
-                </span>
-              </div>
-              <div>
-                <h2 className="text-3xl font-bold text-white">
-                  {customer.firstName} {customer.lastName}
-                </h2>
-                <p className="text-white text-opacity-80">{customer.phone}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="bg-white bg-opacity-20 rounded-xl p-4">
-                <p className="text-white text-opacity-80 text-sm">Email</p>
-                <p className="text-white font-semibold">{customer.email || 'N/A'}</p>
-              </div>
-              <div className="bg-white bg-opacity-20 rounded-xl p-4">
-                <p className="text-white text-opacity-80 text-sm">Current Balance</p>
-                <p className="text-white font-semibold text-xl">₦{customer.balance?.toLocaleString() || '0'}</p>
-              </div>
-              <div className="bg-white bg-opacity-20 rounded-xl p-4">
-                <p className="text-white text-opacity-80 text-sm">Contribution Frequency</p>
-                <p className="text-white font-semibold capitalize">{customer.contributionFrequency}</p>
-              </div>
-              <div className="bg-white bg-opacity-20 rounded-xl p-4">
-                <p className="text-white text-opacity-80 text-sm">Registered By</p>
-                <p className="text-white font-semibold">Agent {customer.agentId?.lastName || 'Unknown'}</p>
-              </div>
-            </div>
-          </div>
+        
 
           {/* Payment History */}
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white border-opacity-20 p-8">

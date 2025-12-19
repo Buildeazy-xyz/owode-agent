@@ -190,7 +190,7 @@ const AddPayment = () => {
           key={i}
           onClick={() => isAvailable && setSelectedDate(i)}
           disabled={isPaid || isBlocked}
-          className={`w-16 h-16 rounded-lg font-semibold transition-all duration-200 relative flex flex-col items-center justify-center ${
+          className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg font-semibold transition-all duration-200 relative flex flex-col items-center justify-center ${
             isPaid
               ? 'bg-green-500 text-white shadow-lg cursor-not-allowed opacity-75'
               : isSelected
@@ -200,13 +200,13 @@ const AddPayment = () => {
               : 'bg-gray-500 bg-opacity-20 text-gray-400 cursor-not-allowed opacity-50'
           }`}
         >
-          <span className="text-xs font-bold">
+          <span className="text-xs sm:text-xs lg:text-sm font-bold">
             {frequency === 'daily' ? `Day ${i}` :
              frequency === 'weekly' ? `Week ${i}` :
              frequency === 'monthly' ? `Month ${i}` :
              `Year ${i}`}
           </span>
-          <span className="text-xs opacity-80">
+          <span className="text-xs opacity-80 hidden sm:block">
             {frequency === 'yearly'
               ? actualDate.getFullYear()
               : actualDate.toLocaleDateString('en-US', {
@@ -269,9 +269,8 @@ const AddPayment = () => {
                 <img
                   src="/owodelogo.jpeg"
                   alt="Owode Agent Logo"
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-2xl object-cover"
+                  className="h-12 sm:h-16 rounded-2xl shadow-2xl object-contain"
                 />
-                <h1 className="ml-3 sm:ml-4 text-lg sm:text-2xl font-bold text-white">Add Payment</h1>
               </div>
               <button
                 onClick={() => navigate('/dashboard')}
@@ -285,6 +284,8 @@ const AddPayment = () => {
 
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+                          <h1 className="ml-3 sm:ml-4 text-lg sm:text-2xl font-bold text-white">Add Payment</h1>
+
           {/* Customer Info */}
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white border-opacity-20 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
             <div className="flex items-center mb-4 sm:mb-6">
@@ -345,7 +346,7 @@ const AddPayment = () => {
               </div>
 
               {customer?.contributionFrequency === 'daily' ? (
-                <div className="grid grid-cols-6 gap-3">
+                <div className="grid grid-cols-7 sm:grid-cols-8 lg:grid-cols-6 gap-2 sm:gap-3">
                   {renderCalendar()}
                 </div>
               ) : customer?.contributionFrequency === 'weekly' ? (
@@ -356,7 +357,7 @@ const AddPayment = () => {
                 <>
                   <div className="grid grid-cols-7 gap-2 mb-4">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="text-center text-white text-opacity-60 font-medium py-2">
+                      <div key={day} className="text-center text-white text-opacity-60 font-medium py-2 text-xs sm:text-sm">
                         {day}
                       </div>
                     ))}
