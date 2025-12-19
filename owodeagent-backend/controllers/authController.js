@@ -78,7 +78,7 @@ const registerAgent = async (req, res) => {
 
             <p>Please review and approve this agent registration.</p>
 
-            <a href="http://localhost:3000/admin" class="action-btn">Review Agent Applications</a>
+            <a href="https://owode.xyz/admin" class="action-btn">Review Agent Applications</a>
           </div>
 
           <div class="footer">
@@ -191,7 +191,7 @@ const approveAgent = async (req, res) => {
             </div>
 
             <div style="text-align: center;">
-              <a href="http://localhost:3000/login" class="action-btn">Login to Your Dashboard</a>
+              <a href="https://owode.xyz/login" class="action-btn">Login to Your Dashboard</a>
             </div>
 
             <p style="text-align: center; margin-top: 20px; color: #666;">
