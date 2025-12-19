@@ -13,27 +13,34 @@ const app = express();
 /* ---------- CORS CONFIGURATION ---------- */
 const allowedOrigins = [
   'https://owode.xyz',
-  'https://www.owode.xyz'
+  'https://www.owode.xyz',
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5000'
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (like Postman)
-    if (!origin) return callback(null, true);
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  // Allow requests with no origin (Postman, mobile apps, etc.)
+  if (!origin) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  } else if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
 
-// 🔥 THIS LINE IS CRITICAL - Handle preflight requests
-app.options('*', cors());
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
+    return res.sendStatus(204);
+  }
+
+  next();
+});
 
 app.use(express.json());
 

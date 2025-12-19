@@ -4,7 +4,7 @@ import axios from 'axios';
 const getApiUrl = () => {
   // Production URLs
   if (window.location.hostname === 'owode.xyz' || window.location.hostname === 'www.owode.xyz') {
-    return 'https://owode-agent-backend.onrender.com';
+    return 'https://owode-agent.onrender.com';
   }
 
   // Development fallback
