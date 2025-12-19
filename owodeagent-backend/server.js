@@ -11,7 +11,7 @@ const paymentRoutes = require("./routes/payments");
 const app = express();
 
 /* ---------- MIDDLEWARE ---------- */
-app.use(cors({
+const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
     ? function (origin, callback) {
         // Allow requests with no origin (mobile apps, etc.)
@@ -33,8 +33,16 @@ app.use(cors({
         return callback(null, true);
       }
     : ['http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:3000', 'http://127.0.0.1:5000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
+
 app.use(express.json());
 
 /* ---------- DATABASE ---------- */
