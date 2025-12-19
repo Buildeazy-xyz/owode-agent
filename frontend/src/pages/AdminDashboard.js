@@ -14,15 +14,28 @@ const AdminDashboard = () => {
 
   const fetchPendingItems = async () => {
     try {
+      // Make API calls without Authorization header for public endpoints
+      const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
       const [agentsRes, deletionsRes] = await Promise.all([
-        api.get('/auth/pending-agents'),
-        api.get('/customers/pending-deletions')
+        fetch(`${baseURL}/auth/pending-agents`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then(res => res.json()),
+        fetch(`${baseURL}/customers/pending-deletions`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then(res => res.json())
       ]);
 
-      setPendingAgents(agentsRes.data);
-      setPendingDeletions(deletionsRes.data);
+      setPendingAgents(Array.isArray(agentsRes) ? agentsRes : []);
+      setPendingDeletions(Array.isArray(deletionsRes) ? deletionsRes : []);
     } catch (error) {
-      console.error('Failed to fetch pending items');
+      console.error('Failed to fetch pending items:', error);
       // For demo purposes, set empty arrays if API fails
       setPendingAgents([]);
       setPendingDeletions([]);
