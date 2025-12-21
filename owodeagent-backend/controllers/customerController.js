@@ -377,11 +377,14 @@ const approveDeletion = async (req, res) => {
 
 const getPendingDeletions = async (req, res) => {
   try {
+    console.log('Fetching pending deletions...');
     const pendingDeletions = await Customer.find({ deletionRequested: true })
       .populate('agentId', 'firstName lastName email')
       .select('firstName lastName email phone balance deletionReason deletionRequestDate agentId');
+    console.log(`Found ${pendingDeletions.length} pending deletions`);
     res.json(pendingDeletions);
   } catch (error) {
+    console.error('Error fetching pending deletions:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
