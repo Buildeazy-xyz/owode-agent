@@ -14,8 +14,15 @@ const AdminDashboard = () => {
 
   const fetchPendingItems = async () => {
     try {
-      // Make API calls without Authorization header for public endpoints
-      const baseURL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      // Determine API URL based on environment (same logic as api.js)
+      const getApiUrl = () => {
+        if (window.location.hostname === 'owode.xyz' || window.location.hostname === 'www.owode.xyz') {
+          return 'https://owode-agent.onrender.com';
+        }
+        return process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      };
+
+      const baseURL = getApiUrl();
 
       const [agentsRes, deletionsRes] = await Promise.all([
         fetch(`${baseURL}/auth/pending-agents`, {
