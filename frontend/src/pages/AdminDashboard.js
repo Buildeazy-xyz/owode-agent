@@ -60,7 +60,7 @@ const AdminDashboard = () => {
       const response = await api.post('/auth/approve-agent', { agentId });
       alert('Agent approved successfully! Email and SMS notifications sent.');
       console.log('Approval response:', response.data);
-      fetchPendingItems(); // Refresh the list
+      fetchAdminData(); // Refresh the list
     } catch (error) {
       console.error('Approval error:', error);
       alert('Failed to approve agent: ' + (error.response?.data?.message || error.message));
@@ -71,7 +71,7 @@ const AdminDashboard = () => {
     try {
       await api.post('/customers/approve-deletion', { customerId, approved });
       alert(approved ? 'Customer deleted successfully!' : 'Customer deletion denied');
-      fetchPendingItems();
+      fetchAdminData();
     } catch (error) {
       alert('Failed to process customer deletion');
     }
