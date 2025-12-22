@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { registerAgent, approveAgent, login, getPendingAgents, getAllAgents, getAllAgentsForAdmin } = require('../controllers/authController');
+const { registerAgent, approveAgent, login, getPendingAgents, getAllAgents, getAllAgentsForAdmin, getAgentById } = require('../controllers/authController');
 
 const router = express.Router();
 
