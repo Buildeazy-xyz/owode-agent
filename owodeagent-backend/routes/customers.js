@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { getCustomers, getCustomerById, createCustomer, deleteCustomer, requestDeletion, approveDeletion, getPendingDeletions, getAllCustomers } = require('../controllers/customerController');
+const { getCustomers, getCustomerById, createCustomer, deleteCustomer, requestDeletion, approveDeletion, getPendingDeletions, getAllCustomers, getCustomersByAgent } = require('../controllers/customerController');
 const auth = require('../middleware/auth');
 const agentApproved = require('../middleware/agentApproved');
 
@@ -242,5 +242,7 @@ router.get('/deny-deletion/:customerId', async (req, res) => {
 });
 
 router.get('/pending-deletions', getPendingDeletions); // Admin route, no auth for now
+
+router.get('/agent/:agentId', getCustomersByAgent); // Admin route, no auth for now
 
 module.exports = router;

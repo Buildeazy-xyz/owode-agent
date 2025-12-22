@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const AdminDashboard = () => {
-  const [pendingAgents, setPendingAgents] = useState([]);
+  const [allAgents, setAllAgents] = useState([]);
   const [pendingDeletions, setPendingDeletions] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPendingItems();
+    fetchAdminData();
   }, []);
 
-  const fetchPendingItems = async () => {
+  const fetchAdminData = async () => {
     try {
       // Determine API URL based on environment (same logic as api.js)
       const getApiUrl = () => {
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
       const baseURL = getApiUrl();
 
       const [agentsRes, deletionsRes] = await Promise.all([
-        fetch(`${baseURL}/auth/pending-agents`, {
+        fetch(`${baseURL}/auth/all-agents`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -39,16 +39,20 @@ const AdminDashboard = () => {
         }).then(res => res.json())
       ]);
 
-      setPendingAgents(Array.isArray(agentsRes) ? agentsRes : []);
+      setAllAgents(Array.isArray(agentsRes) ? agentsRes : []);
       setPendingDeletions(Array.isArray(deletionsRes) ? deletionsRes : []);
     } catch (error) {
-      console.error('Failed to fetch pending items:', error);
+      console.error('Failed to fetch admin data:', error);
       // For demo purposes, set empty arrays if API fails
-      setPendingAgents([]);
+      setAllAgents([]);
       setPendingDeletions([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const viewAgentDashboard = (agentId) => {
+    navigate(`/admin/agent/${agentId}`);
   };
 
   const approveAgent = async (agentId) => {
@@ -146,42 +150,69 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Pending Agents Section */}
+          {/* All Agents Section */}
           <div className="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white border-opacity-20 p-6 sm:p-8 mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">Pending Agent Approvals</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6">All Agents</h2>
 
-            <div className="bg-yellow-500 bg-opacity-20 border border-yellow-500 border-opacity-30 rounded-xl p-4 mb-6">
-              <p className="text-yellow-100">
-                <strong>Note:</strong> This demo shows a basic admin interface. In production, you'd implement proper authentication and database queries to show pending agents.
+            <div className="bg-blue-500 bg-opacity-20 border border-blue-500 border-opacity-30 rounded-xl p-4 mb-6">
+              <p className="text-blue-100">
+                <strong>Admin Panel:</strong> View all registered agents. Click on an agent to see their details and customers.
               </p>
             </div>
 
-            {pendingAgents.length === 0 ? (
+            {allAgents.length === 0 ? (
               <div className="text-center py-12">
                 <div className="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg className="w-12 h-12 text-white text-opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <p className="text-xl text-white text-opacity-80">No pending agent approvals</p>
-                <p className="text-white text-opacity-60 mt-2">All agents have been processed</p>
+                <p className="text-xl text-white text-opacity-80">No agents found</p>
+                <p className="text-white text-opacity-60 mt-2">Agents will appear here once they register</p>
               </div>
             ) : (
               <div className="space-y-4">
-                {pendingAgents.map((agent) => (
-                  <div key={agent._id} className="bg-white bg-opacity-20 rounded-xl p-6 border border-white border-opacity-30">
+                {allAgents.map((agent) => (
+                  <div key={agent._id} className="bg-white bg-opacity-20 rounded-xl p-6 border border-white border-opacity-30 hover:bg-opacity-30 transition-all duration-200 cursor-pointer" onClick={() => viewAgentDashboard(agent._id)}>
                     <div className="flex justify-between items-center">
-                      <div>
+                      <div className="flex-1">
                         <h3 className="text-xl font-bold text-white">{agent.firstName} {agent.lastName}</h3>
                         <p className="text-white text-opacity-80">{agent.email}</p>
                         <p className="text-white text-opacity-60">{agent.phone}</p>
+                        <div className="flex items-center mt-2">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            agent.status === 'approved'
+                              ? 'bg-green-500 bg-opacity-20 text-green-100 border border-green-500 border-opacity-30'
+                              : agent.status === 'pending'
+                              ? 'bg-yellow-500 bg-opacity-20 text-yellow-100 border border-yellow-500 border-opacity-30'
+                              : 'bg-red-500 bg-opacity-20 text-red-100 border border-red-500 border-opacity-30'
+                          }`}>
+                            {agent.status}
+                          </span>
+                          <span className="ml-3 text-white text-opacity-60 text-sm">
+                            Role: {agent.role || 'agent'}
+                          </span>
+                        </div>
                       </div>
-                      <button
-                        onClick={() => approveAgent(agent._id)}
-                        className="bg-green-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-600 transform hover:scale-105 transition-all duration-200"
-                      >
-                        ✅ Approve Agent
-                      </button>
+                      <div className="flex items-center space-x-3">
+                        {agent.status === 'pending' && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              approveAgent(agent._id);
+                            }}
+                            className="bg-green-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-green-600 transform hover:scale-105 transition-all duration-200"
+                          >
+                            ✅ Approve
+                          </button>
+                        )}
+                        <button
+                          onClick={() => viewAgentDashboard(agent._id)}
+                          className="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transform hover:scale-105 transition-all duration-200"
+                        >
+                          👁️ View Details
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}

@@ -280,4 +280,34 @@ const getAllAgents = async (req, res) => {
   }
 };
 
-module.exports = { registerAgent, approveAgent, login, getPendingAgents };
+const getAllAgentsForAdmin = async (req, res) => {
+  try {
+    console.log('Fetching all agents for admin...');
+    const allAgents = await Agent.find({})
+      .select('firstName lastName email phone status role createdAt approvedAt')
+      .sort({ createdAt: -1 });
+    console.log(`Found ${allAgents.length} agents`);
+    res.json(allAgents);
+  } catch (error) {
+    console.error('Error fetching all agents:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const getAgentById = async (req, res) => {
+  try {
+    console.log('Fetching agent by ID:', req.params.id);
+    const agent = await Agent.findById(req.params.id)
+      .select('firstName lastName email phone status role createdAt approvedAt');
+    if (!agent) {
+      return res.status(404).json({ message: 'Agent not found' });
+    }
+    console.log('Found agent:', agent.firstName, agent.lastName);
+    res.json(agent);
+  } catch (error) {
+    console.error('Error fetching agent:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+module.exports = { registerAgent, approveAgent, login, getPendingAgents, getAllAgentsForAdmin, getAgentById };

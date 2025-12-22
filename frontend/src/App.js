@@ -8,6 +8,7 @@ import CustomerHistory from './pages/CustomerHistory';
 import AddPayment from './pages/AddPayment';
 import CustomerDashboard from './pages/CustomerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import AgentDashboard from './pages/AgentDashboard';
 
 function App()  {
   return (
@@ -19,6 +20,7 @@ function App()  {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/agent/:agentId" element={<AgentDashboard />} />
           <Route path="/customer/:customerId/dashboard" element={<CustomerDashboard />} />
           <Route path="/customer/:customerId/add-payment" element={<AddPayment />} />
           <Route path="/customer/:id/history" element={<CustomerHistory />} />

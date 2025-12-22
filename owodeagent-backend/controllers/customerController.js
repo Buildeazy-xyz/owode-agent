@@ -403,6 +403,19 @@ const getAllCustomers = async (req, res) => {
   }
 };
 
+const getCustomersByAgent = async (req, res) => {
+  try {
+    console.log('Fetching customers for agent:', req.params.agentId);
+    const customers = await Customer.find({ agentId: req.params.agentId })
+      .select('firstName lastName email phone balance contributionAmount contributionFrequency createdAt');
+    console.log(`Found ${customers.length} customers for agent`);
+    res.json(customers);
+  } catch (error) {
+    console.error('Error fetching customers by agent:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 const deleteAllCustomers = async (req, res) => {
   try {
     // Only super-admin can delete all customers
@@ -422,4 +435,4 @@ const deleteAllCustomers = async (req, res) => {
   }
 };
 
-module.exports = { getCustomers, getCustomerById, createCustomer, deleteCustomer, requestDeletion, approveDeletion, getPendingDeletions, getAllCustomers, deleteAllCustomers };
+module.exports = { getCustomers, getCustomerById, createCustomer, deleteCustomer, requestDeletion, approveDeletion, getPendingDeletions, getAllCustomers, deleteAllCustomers, getCustomersByAgent };

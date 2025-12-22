@@ -1,6 +1,6 @@
 const express = require('express');
 const { body } = require('express-validator');
-const { registerAgent, approveAgent, login, getPendingAgents, getAllAgents } = require('../controllers/authController');
+const { registerAgent, approveAgent, login, getPendingAgents, getAllAgents, getAllAgentsForAdmin } = require('../controllers/authController');
 
 const router = express.Router();
 
@@ -16,6 +16,10 @@ router.post('/register-agent', [
 router.post('/approve-agent', approveAgent); // Admin route, no auth for now
 
 router.get('/pending-agents', getPendingAgents); // Admin route, no auth for now
+
+router.get('/all-agents', getAllAgentsForAdmin); // Admin route, no auth for now
+
+router.get('/agent/:id', getAgentById); // Admin route, no auth for now
 
 router.post('/login', [
   body('email').isEmail(),
