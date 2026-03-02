@@ -11,6 +11,14 @@ const addPaymentController = async (req, res) => {
   const { customerId, amount, paymentDate, notifyType, paymentIndex } = req.body;
 
   try {
+    // Check if the customer belongs to the current agent
+    const Customer = require('../models/Customer');
+    const customer = await Customer.findOne({ _id: customerId, agentId: req.agent.id });
+    
+    if (!customer) {
+      return res.status(403).json({ message: 'You can only add payments for your own customers' });
+    }
+
     const result = await addPayment(customerId, req.agent.id, amount, notifyType, paymentDate, paymentIndex);
     res.status(201).json(result);
   } catch (error) {

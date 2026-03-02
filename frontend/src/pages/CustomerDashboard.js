@@ -6,6 +6,7 @@ const CustomerDashboard = () => {
   const [customer, setCustomer] = useState(null);
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [canAddPayment, setCanAddPayment] = useState(true);
   const { customerId } = useParams();
   const navigate = useNavigate();
 
@@ -18,13 +19,20 @@ const CustomerDashboard = () => {
       setLoading(true);
       const [customerRes, paymentsRes] = await Promise.all([
         api.get(`/customers/${customerId}`),
-        api.get(`/payments/customer/${customerId}`)
+        api.get(`/payments/recent/${customerId}`)
       ]);
       setCustomer(customerRes.data);
       setPayments(paymentsRes.data);
+      
+      // Check if customer belongs to current agent
+      // If the customer request succeeds, it means the customer belongs to this agent
+      setCanAddPayment(true);
     } catch (error) {
       console.error('Error fetching customer data:', error);
-      if (error.response?.status === 401) {
+      if (error.response?.status === 404) {
+        // Customer not found or doesn't belong to this agent
+        setCanAddPayment(false);
+      } else if (error.response?.status === 401) {
         navigate('/login');
       }
     } finally {
@@ -72,12 +80,14 @@ const CustomerDashboard = () => {
                
               </div>
               <div className="flex space-x-2">
-                <button
-                  onClick={() => navigate(`/customer/${customerId}/add-payment`)}
-                  className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-xl hover:from-green-500 hover:to-blue-600 transform hover:scale-105 transition-all duration-200"
-                >
-                   Add
-                </button>
+                {canAddPayment && (
+                  <button
+                    onClick={() => navigate(`/customer/${customerId}/add-payment`)}
+                    className="bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-xl hover:from-green-500 hover:to-blue-600 transform hover:scale-105 transition-all duration-200"
+                  >
+                     Add
+                  </button>
+                )}
                 <button
                   onClick={() => navigate(`/customer/${customerId}/history`)}
                   className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-4 py-2 rounded-xl hover:from-cyan-500 hover:to-blue-600 transform hover:scale-105 transition-all duration-200"

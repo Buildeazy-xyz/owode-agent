@@ -19,7 +19,8 @@ const Login = () => {
       localStorage.setItem('agent', JSON.stringify(res.data.agent));
       navigate('/dashboard');
     } catch (error) {
-      setMessage('Login failed.');
+      const errorMessage = error.response?.data?.message || 'Login failed.';
+      setMessage(errorMessage);
     }
   };
 

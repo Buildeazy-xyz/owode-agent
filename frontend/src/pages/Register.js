@@ -11,6 +11,7 @@ const Register = () => {
     password: '',
   });
   const [message, setMessage] = useState('');
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -22,7 +23,11 @@ const Register = () => {
     try {
       await api.post('/auth/register-agent', form);
       setMessage('Registration successful. Wait for approval.');
-      setTimeout(() => navigate('/login'), 2000);
+      setShowSuccessPopup(true);
+      setTimeout(() => {
+        setShowSuccessPopup(false);
+        navigate('/login');
+      }, 5000);
     } catch (error) {
       const errorMessage = error.response?.data?.message ||
                           error.response?.data?.errors?.[0]?.msg ||
@@ -32,7 +37,41 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 flex items-center justify-center px-4">
+    <>
+      <style jsx>{`
+        @keyframes bounce-in {
+          0% {
+            transform: scale(0);
+            opacity: 0;
+          }
+          50% {
+            transform: scale(1.05);
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+        
+        @keyframes progress-bar {
+          0% {
+            width: 0%;
+          }
+          100% {
+            width: 100%;
+          }
+        }
+        
+        .animate-bounce-in {
+          animation: bounce-in 0.5s ease-out forwards;
+        }
+        
+        .animate-progress-bar {
+          animation: progress-bar 5s linear forwards;
+        }
+      `}</style>
+      
+      <div className="min-h-screen bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 flex items-center justify-center px-4">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
@@ -141,6 +180,33 @@ const Register = () => {
           </div>
         </div>
 
+        {/* Success Popup Animation */}
+        {showSuccessPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 max-w-md mx-4 transform scale-0 animate-bounce-in">
+              <div className="text-center">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-2">Registration Successful!</h3>
+                <p className="text-gray-600 mb-4">
+                  Your account has been created successfully. The admin will review your application and email you once your account is approved.
+                </p>
+                <p className="text-sm text-gray-500">
+                  You will be redirected to the login page in a few seconds...
+                </p>
+                <div className="mt-4">
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="bg-green-500 h-2 rounded-full animate-progress-bar"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Back to home */}
         <div className="text-center mt-6">
           <Link
@@ -151,7 +217,8 @@ const Register = () => {
           </Link>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -225,7 +225,7 @@ const login = async (req, res) => {
   try {
     const agent = await Agent.findOne({ email });
     if (!agent) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'details not registered' });
     }
 
     // Check if agent is approved

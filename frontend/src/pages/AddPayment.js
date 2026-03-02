@@ -7,7 +7,8 @@ const AddPayment = () => {
   const navigate = useNavigate();
   const [customer, setCustomer] = useState(null);
   const [amount, setAmount] = useState('');
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
   const [notifyType, setNotifyType] = useState('none');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
@@ -23,6 +24,13 @@ const AddPayment = () => {
       // Fetch customer details
       const customersRes = await api.get('/customers/list');
       const foundCustomer = customersRes.data.find(c => c._id === customerId);
+      
+      if (!foundCustomer) {
+        setMessage('Customer not found or you do not have permission to add payments for this customer');
+        setLoading(false);
+        return;
+      }
+      
       setCustomer(foundCustomer);
       setAmount(foundCustomer?.contributionAmount || '');
 
@@ -112,6 +120,25 @@ const AddPayment = () => {
     }
 
     return null; // All payments complete
+  };
+
+  // Smart day selection based on amount
+  const calculateDaysFromAmount = (amount) => {
+    if (!customer?.contributionAmount || !amount) return 1;
+    
+    const days = Math.floor(parseFloat(amount) / parseFloat(customer.contributionAmount));
+    return Math.max(1, days); // Ensure at least 1 day
+  };
+
+  // Auto-select days when amount changes
+  const handleAmountChange = (e) => {
+    const newAmount = e.target.value;
+    setAmount(newAmount);
+    
+    if (customer?.contributionAmount && newAmount) {
+      const calculatedDays = calculateDaysFromAmount(newAmount);
+      setSelectedDate(calculatedDays);
+    }
   };
 
   const getWeekDays = (weekNum) => {
@@ -410,11 +437,16 @@ const AddPayment = () => {
                   <input
                     type="number"
                     value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    onChange={handleAmountChange}
                     className="w-full px-3 sm:px-4 py-3 bg-white bg-opacity-20 border border-white border-opacity-30 rounded-xl text-white placeholder-white placeholder-opacity-70 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-200 text-base sm:text-lg"
                     required
                     min="1"
                   />
+                  {amount && customer?.contributionAmount && (
+                    <p className="text-white text-opacity-80 text-xs sm:text-sm mt-2">
+                      This payment covers {calculateDaysFromAmount(amount)} day(s)
+                    </p>
+                  )}
                 </div>
 
                 <div>

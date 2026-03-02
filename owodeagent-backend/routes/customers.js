@@ -8,6 +8,23 @@ const router = express.Router();
 
 router.get('/list', auth, agentApproved, getCustomers);
 
+// Admin route to see all customers from all agents
+router.get('/admin/all', auth, async (req, res) => {
+  try {
+    if (req.agent.role !== 'super-admin') {
+      return res.status(403).json({ message: 'Access denied. Admin only.' });
+    }
+    
+    const Customer = require('../models/Customer');
+    const customers = await Customer.find({})
+      .populate('agentId', 'firstName lastName email')
+      .sort({ createdAt: -1 });
+    res.json(customers);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 router.get('/:id', auth, agentApproved, getCustomerById);
 
 router.post('/create', [
