@@ -18,7 +18,10 @@ const sendSMS = async (to, body) => {
   try {
     const message = await client.messages.create({
       body,
-      from: process.env.TWILIO_PHONE_NUMBER,
+      // Use messaging service for custom sender ID
+      messagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID,
+      // Fallback to regular number if messaging service not configured
+      from: process.env.TWILIO_MESSAGING_SERVICE_SID ? undefined : process.env.TWILIO_PHONE_NUMBER,
       to: formattedTo,
     });
     console.log('SMS sent successfully:', message.sid);
