@@ -74,6 +74,10 @@ const AdminDashboard = () => {
     }
   };
 
+  const viewAgentDetails = (agentId) => {
+    navigate(`/admin/agent/${agentId}`);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700 flex items-center justify-center">
@@ -189,8 +193,8 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {customers.slice(0, 5).map(customer => (
-                      <tr key={customer._id} className="border-b border-white border-opacity-10">
+                    {customers.slice(0, 10).map(customer => (
+                      <tr key={customer._id} className="border-b border-white border-opacity-10 hover:bg-white hover:bg-opacity-30 transition-all duration-200">
                         <td className="py-2">{customer.firstName} {customer.lastName}</td>
                         <td className="py-2">{customer.email || '-'}</td>
                         <td className="py-2">Agent {customer.agentId?.lastName || 'Unknown'}</td>
@@ -215,10 +219,16 @@ const AdminDashboard = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {agents.slice(0, 5).map(agent => (
-                      <tr key={agent._id} className="border-b border-white border-opacity-10">
-                        <td className="py-2">{agent.firstName} {agent.lastName}</td>
-                        <td className="py-2">{agent.email}</td>
+                    {agents.map(agent => (
+                      <tr key={agent._id} className="border-b border-white border-opacity-10 hover:bg-white hover:bg-opacity-30 transition-all duration-200">
+                        <td className="py-2">
+                          <div className="flex items-center space-x-3">
+                            <div>
+                              <p className="font-medium text-white">{agent.firstName} {agent.lastName}</p>
+                              <p className="text-sm text-white text-opacity-80">{agent.email}</p>
+                              <p className="text-xs text-white text-opacity-60">{agent.phone}</p>
+                            </div>
+                          </td>
                         <td className="py-2">
                           <span className={`px-2 py-1 rounded-full text-xs ${
                             agent.status === 'approved' ? 'bg-green-500' : 
@@ -228,14 +238,22 @@ const AdminDashboard = () => {
                           </span>
                         </td>
                         <td className="py-2">
-                          {agent.status === 'pending' && (
+                          <div className="flex space-x-2">
+                            {agent.status === 'pending' && (
+                              <button
+                                onClick={() => approveAgent(agent._id)}
+                                className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition-colors text-sm"
+                              >
+                                Approve
+                              </button>
+                            )}
                             <button
-                              onClick={() => approveAgent(agent._id)}
-                              className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition-colors text-sm"
+                              onClick={() => viewAgentDetails(agent._id)}
+                              className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors text-sm ml-2"
                             >
-                              Approve
+                              View Details
                             </button>
-                          )}
+                          </div>
                         </td>
                       </tr>
                     ))}
