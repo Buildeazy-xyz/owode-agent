@@ -24,12 +24,21 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       
+      // Test backend connectivity first
+      console.log('Testing backend connectivity...');
+      const testResponse = await api.get('/auth/test');
+      console.log('Backend test response:', testResponse.data);
+      
       // Fetch all data using admin routes
       const [customersRes, agentsRes, paymentsRes] = await Promise.all([
         api.get('/customers/admin/all'),
         api.get('/auth/all-agents'),
         api.get('/payments/admin/all')
       ]);
+
+      console.log('API Response - Agents:', agentsRes.data);
+      console.log('API Response - Customers:', customersRes.data);
+      console.log('API Response - Payments:', paymentsRes.data);
 
       const customers = customersRes.data;
       const agents = agentsRes.data;
@@ -43,6 +52,14 @@ const AdminDashboard = () => {
       const totalRevenue = payments.reduce((sum, payment) => sum + payment.amount, 0);
       const pendingAgents = agents.filter(agent => agent.status === 'pending').length;
 
+      console.log('Calculated Stats:', {
+        totalCustomers: customers.length,
+        totalAgents: agents.length,
+        totalPayments: payments.length,
+        totalRevenue: totalRevenue,
+        pendingAgents: pendingAgents
+      });
+
       setStats({
         totalCustomers: customers.length,
         totalAgents: agents.length,
@@ -53,6 +70,7 @@ const AdminDashboard = () => {
 
     } catch (error) {
       console.error('Error fetching admin dashboard data:', error);
+      console.error('Error details:', error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
