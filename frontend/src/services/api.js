@@ -20,6 +20,10 @@ api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log('API Request - Adding token to:', config.url);
+    console.log('API Request - Token preview:', token.substring(0, 20) + '...');
+  } else {
+    console.log('API Request - No token found in localStorage for:', config.url);
   }
   return config;
 });
