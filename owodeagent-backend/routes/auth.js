@@ -21,12 +21,6 @@ router.get('/all-agents', getAllAgentsForAdmin); // Admin route, no auth for now
 
 router.get('/agent/:id', getAgentById); // Admin route, no auth for now
 
-// Test endpoint for debugging
-router.get('/test', (req, res) => {
-  console.log('Test endpoint hit - backend is working');
-  res.json({ message: 'Backend is working', timestamp: new Date() });
-});
-
 router.post('/login', [
   body('email').isEmail(),
   body('password').notEmpty(),
