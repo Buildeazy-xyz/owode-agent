@@ -31,6 +31,10 @@ const AdminDashboard = () => {
         api.get('/payments/admin/all')
       ]);
 
+      console.log('API Response - Agents:', agentsRes.data);
+      console.log('API Response - Customers:', customersRes.data);
+      console.log('API Response - Payments:', paymentsRes.data);
+
       const customers = customersRes.data;
       const agents = agentsRes.data;
       const payments = paymentsRes.data;
@@ -42,6 +46,14 @@ const AdminDashboard = () => {
       // Calculate statistics
       const totalRevenue = payments.reduce((sum, payment) => sum + payment.amount, 0);
       const pendingAgents = agents.filter(agent => agent.status === 'pending').length;
+
+      console.log('Calculated Stats:', {
+        totalCustomers: customers.length,
+        totalAgents: agents.length,
+        totalPayments: payments.length,
+        totalRevenue: totalRevenue,
+        pendingAgents: pendingAgents
+      });
 
       setStats({
         totalCustomers: customers.length,

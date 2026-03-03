@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 const Agent = require('../models/Agent');
 const { sendEmail } = require('../utils/resendEmail');
 const { sendSMS } = require('../utils/sendSMS');
@@ -283,10 +284,17 @@ const getAllAgents = async (req, res) => {
 const getAllAgentsForAdmin = async (req, res) => {
   try {
     console.log('Fetching all agents for admin...');
+    console.log('MongoDB connection state:', mongoose.connection.readyState);
+    
     const allAgents = await Agent.find({})
       .select('firstName lastName email phone status role createdAt approvedAt')
       .sort({ createdAt: -1 });
+    
     console.log(`Found ${allAgents.length} agents`);
+    allAgents.forEach((agent, index) => {
+      console.log(`  ${index + 1}. ${agent.firstName} ${agent.lastName} (${agent.email}) - Status: ${agent.status}`);
+    });
+    
     res.json(allAgents);
   } catch (error) {
     console.error('Error fetching all agents:', error);
