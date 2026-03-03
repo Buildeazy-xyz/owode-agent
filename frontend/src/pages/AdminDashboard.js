@@ -64,6 +64,16 @@ const AdminDashboard = () => {
     navigate('/login');
   };
 
+  const approveAgent = async (agentId) => {
+    try {
+      const response = await api.post('/auth/approve-agent', { agentId });
+      alert('Agent approved successfully!');
+      fetchDashboardData(); // Refresh data
+    } catch (error) {
+      alert('Failed to approve agent: ' + (error.response?.data?.message || error.message));
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700 flex items-center justify-center">
@@ -201,6 +211,7 @@ const AdminDashboard = () => {
                       <th className="text-left py-2">Name</th>
                       <th className="text-left py-2">Email</th>
                       <th className="text-left py-2">Status</th>
+                      <th className="text-left py-2">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -215,6 +226,16 @@ const AdminDashboard = () => {
                           }`}>
                             {agent.status}
                           </span>
+                        </td>
+                        <td className="py-2">
+                          {agent.status === 'pending' && (
+                            <button
+                              onClick={() => approveAgent(agent._id)}
+                              className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition-colors text-sm"
+                            >
+                              Approve
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}
