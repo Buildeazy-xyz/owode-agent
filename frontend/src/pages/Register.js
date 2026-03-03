@@ -27,7 +27,7 @@ const Register = () => {
       setTimeout(() => {
         setShowSuccessPopup(false);
         navigate('/login');
-      }, 5000);
+      }, 120000); // 2 minutes delay (120,000ms)
     } catch (error) {
       const errorMessage = error.response?.data?.message ||
                           error.response?.data?.errors?.[0]?.msg ||
@@ -53,6 +53,15 @@ const Register = () => {
           }
         }
         
+        @keyframes progress-bar-2min {
+          0% {
+            width: 0%;
+          }
+          100% {
+            width: 100%;
+          }
+        }
+        
         @keyframes progress-bar {
           0% {
             width: 0%;
@@ -66,8 +75,8 @@ const Register = () => {
           animation: bounce-in 0.5s ease-out forwards;
         }
         
-        .animate-progress-bar {
-          animation: progress-bar 5s linear forwards;
+        .animate-progress-bar-2min {
+          animation: progress-bar-2min 120s linear forwards;
         }
       `}</style>
       
@@ -195,11 +204,11 @@ const Register = () => {
                   Your account has been created successfully. The admin will review your application and email you once your account is approved.
                 </p>
                 <p className="text-sm text-gray-500">
-                  You will be redirected to the login page in a few seconds...
+                  You will be redirected to login page in 2 minutes...
                 </p>
                 <div className="mt-4">
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-green-500 h-2 rounded-full animate-progress-bar"></div>
+                    <div className="bg-green-500 h-2 rounded-full animate-progress-bar-2min"></div>
                   </div>
                 </div>
               </div>

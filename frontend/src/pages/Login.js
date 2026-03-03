@@ -17,7 +17,13 @@ const Login = () => {
       const res = await api.post('/auth/login', form);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('agent', JSON.stringify(res.data.agent));
-      navigate('/dashboard');
+      
+      // Route admins to admin dashboard, agents to regular dashboard
+      if (res.data.agent.role === 'super-admin') {
+        navigate('/admin-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Login failed.';
       setMessage(errorMessage);
