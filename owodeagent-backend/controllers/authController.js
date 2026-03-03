@@ -21,13 +21,18 @@ const registerAgent = async (req, res) => {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
+    
+    // Check if this is an admin email and set role accordingly
+    const isAdminEmail = email === 'info@owodealajo.com' || email === 'aminatiyiola7@gmail.com';
+    
     const agent = new Agent({
       firstName,
       lastName,
       email,
       phone,
       passwordHash,
-      status: 'pending', // Explicitly set status to pending
+      status: 'pending',
+      role: isAdminEmail ? 'super-admin' : 'agent' // Set role based on email
     });
     await agent.save();
 
